@@ -5,6 +5,8 @@ import (
 	"QuizService/internal/infrastructure"
 	"QuizService/internal/usecase"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
