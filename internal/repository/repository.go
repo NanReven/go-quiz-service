@@ -1,5 +1,11 @@
 package repository
 
+import (
+	"QuizService/internal/domain"
+
+	"github.com/jmoiron/sqlx"
+)
+
 type Quiz interface {
 }
 
@@ -7,6 +13,7 @@ type Question interface {
 }
 
 type User interface {
+	Register(input *domain.User) (int, error)
 }
 
 type Repository struct {
@@ -15,6 +22,8 @@ type Repository struct {
 	User
 }
 
-func NewRepository() *Repository {
-	return &Repository{}
+func NewRepository(db *sqlx.DB) *Repository {
+	return &Repository{
+		User: NewUserRepository(db),
+	}
 }
