@@ -27,6 +27,4 @@ go.work.sum
 # Editor/IDE
 .idea/
 .vscode/
-
-#db
 .vs/
