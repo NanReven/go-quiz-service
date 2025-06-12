@@ -4,6 +4,7 @@ import (
 	"QuizService/internal/handler"
 	"QuizService/internal/infrastructure"
 	"QuizService/internal/repository"
+	"QuizService/internal/service"
 	"QuizService/internal/usecase"
 	"log"
 	"os"
@@ -36,12 +37,14 @@ func main() {
 		logrus.Fatal("failed to connect to db", err.Error())
 	}
 
+	jwtService := service.NewJWTService()
+
 	repository := repository.NewRepository(db)
-	usecase := usecase.NewUsecase(repository)
-	handler := handler.NewHandler(usecase)
+	usecase := usecase.NewUsecase(repository, jwtService)
+	handler := handler.NewHandler(usecase, jwtService)
 
 	server := new(infrastructure.Server)
-	log.Fatal(server.Run("8000", handler.InitRouter()))
+	log.Fatal(server.Run(viper.GetString("port"), handler.InitRouter()))
 }
 
 func initConfig() error {
