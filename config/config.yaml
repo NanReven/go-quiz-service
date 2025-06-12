@@ -1,4 +1,8 @@
 port: "8000"
+refresh_cookie_name: "refresh_token"
+access_token_ttl: 15m
+refresh_token_ttl: 720h
+cookie_max_age: 2592000 
 
 db:
   username: "postgres"
