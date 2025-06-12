@@ -1,17 +1,19 @@
 package handler
 
 import (
+	"QuizService/internal/service"
 	"QuizService/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	usecase *usecase.Usecase
+	usecase    *usecase.Usecase
+	jwtService *service.JWTService
 }
 
-func NewHandler(usecase *usecase.Usecase) *Handler {
-	return &Handler{usecase: usecase}
+func NewHandler(usecase *usecase.Usecase, jwtService *service.JWTService) *Handler {
+	return &Handler{usecase: usecase, jwtService: jwtService}
 }
 
 func (h *Handler) InitRouter() *gin.Engine {
@@ -21,10 +23,10 @@ func (h *Handler) InitRouter() *gin.Engine {
 	{
 		auth.POST("/register", h.Register)
 		auth.POST("/login", h.Login)
-		auth.POST("/logout", h.Logout)
+		auth.POST("/refresh", h.Refresh)
 	}
 
-	api := router.Group("/api")
+	api := router.Group("/api", h.AuthMiddleware)
 	{
 		quiz := api.Group("/quiz")
 		{

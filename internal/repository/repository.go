@@ -14,6 +14,7 @@ type Question interface {
 
 type User interface {
 	Register(input *domain.User) (int, error)
+	GetUser(input *domain.UserLogin) (*domain.User, error)
 }
 
 type Repository struct {

@@ -24,3 +24,12 @@ func (repo *UserRepository) Register(input *domain.User) (int, error) {
 	}
 	return id, nil
 }
+
+func (repo *UserRepository) GetUser(input *domain.UserLogin) (*domain.User, error) {
+	var user domain.User
+	query := fmt.Sprintf("SELECT * FROM %s WHERE email=$1 AND password_hash=$2", usersTable)
+	if err := repo.db.Get(&user, query, input.Email, input.Password); err != nil {
+		return &user, err
+	}
+	return &user, nil
+}

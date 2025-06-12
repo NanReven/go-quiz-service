@@ -3,22 +3,66 @@ package usecase
 import (
 	"QuizService/internal/domain"
 	"QuizService/internal/repository"
+	"QuizService/internal/service"
 	"crypto/sha1"
 	"fmt"
 	"os"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type AuthUsecase struct {
-	repo repository.User
+	repo       repository.User
+	jwtService service.JWT
 }
 
-func NewAuthService(repo repository.User) *AuthUsecase {
-	return &AuthUsecase{repo: repo}
+type UserClaims struct {
+	ID int
+	jwt.RegisteredClaims
+}
+
+func NewAuthService(repo repository.User, jwtService service.JWT) *AuthUsecase {
+	return &AuthUsecase{repo: repo, jwtService: jwtService}
 }
 
 func (uc *AuthUsecase) Register(input *domain.User) (int, error) {
 	input.Password = generatePasswordHash(input.Password)
 	return uc.repo.Register(input)
+}
+
+func (uc *AuthUsecase) Login(input *domain.UserLogin) (string, string, error) {
+	input.Password = generatePasswordHash(input.Password)
+
+	user, err := uc.repo.GetUser(input)
+	if err != nil {
+		return "", "", err
+	}
+
+	accessToken, err := uc.jwtService.GenerateAccessToken(user.ID)
+	if err != nil {
+		return "", "", err
+	}
+
+	refreshToken, err := uc.jwtService.GenerateRefreshToken(user.ID)
+	if err != nil {
+		return "", "", err
+	}
+
+	return accessToken, refreshToken, nil
+}
+
+func (uc *AuthUsecase) Refresh(userId int) (string, string, error) {
+	accessToken, err := uc.jwtService.GenerateAccessToken(userId)
+	if err != nil {
+		return "", "", err
+	}
+
+	refreshToken, err := uc.jwtService.GenerateRefreshToken(userId)
+	if err != nil {
+		return "", "", err
+	}
+
+	return accessToken, refreshToken, nil
 }
 
 func generatePasswordHash(password string) string {
