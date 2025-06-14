@@ -1,5 +1,12 @@
 package domain
 
+import "errors"
+
+var (
+	ErrUserNotFound      = errors.New("user not found")
+	ErrUserAlreadyExists = errors.New("user is already exists")
+)
+
 type User struct {
 	ID         int    `json:"id" db:"id"`
 	Email      string `json:"email" binding:"required" db:"email"`

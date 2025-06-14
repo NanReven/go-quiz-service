@@ -5,7 +5,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func newErrorResponse(c *gin.Context, statusCode int, message string) {
-	logrus.Println(message)
-	c.AbortWithStatusJSON(statusCode, gin.H{"error_message": message})
+func newErrorResponse(c *gin.Context, statusCode int, userMessage string, logMessage string) {
+	logrus.WithFields(logrus.Fields{
+		"method":      c.Request.Method,
+		"path":        c.Request.URL.Path,
+		"status_code": statusCode,
+		"message":     logMessage,
+	}).Error("error")
+
+	c.AbortWithStatusJSON(statusCode, gin.H{"error_message": userMessage})
 }

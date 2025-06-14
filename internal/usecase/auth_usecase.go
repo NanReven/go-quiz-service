@@ -26,6 +26,9 @@ func NewAuthService(repo repository.User, jwtService service.JWT) *AuthUsecase {
 }
 
 func (uc *AuthUsecase) Register(input *domain.User) (int, error) {
+	if uc.repo.CheckUserExists(input.Email) {
+		return 0, domain.ErrUserAlreadyExists
+	}
 	input.Password = generatePasswordHash(input.Password)
 	return uc.repo.Register(input)
 }
