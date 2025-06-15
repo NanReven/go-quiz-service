@@ -30,18 +30,18 @@ func (h *Handler) InitRouter() *gin.Engine {
 	{
 		quiz := api.Group("/quiz")
 		{
-			quiz.GET("/", h.GetAllQuizes)
+			quiz.GET("", h.GetAllQuizes)
 			quiz.GET("/:id", h.GetQuizById)
-			quiz.POST("/", h.CreateQuiz)
+			quiz.POST("", h.CreateQuiz)
 			quiz.PUT("/:id", h.UpdateQuiz)
 			quiz.DELETE("/:id", h.DeleteQuiz)
 		}
 
 		question := api.Group("/question")
 		{
-			question.GET("/", h.GetAllQuestions)
+			question.GET("", h.GetAllQuestions)
 			question.GET("/:id", h.GetQuestionById)
-			question.POST("/", h.CreateQuestion)
+			question.POST("", h.CreateQuestion)
 			question.PUT("/:id", h.UpdateQuestion)
 			question.DELETE("/:id", h.DeleteQuestion)
 		}

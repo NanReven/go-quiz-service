@@ -7,6 +7,7 @@ import (
 )
 
 type Quiz interface {
+	CreateQuiz(input *domain.CreateQuiz) (int, error)
 }
 
 type Question interface {
@@ -27,5 +28,6 @@ type Repository struct {
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		User: NewUserRepository(db),
+		Quiz: NewQuizRepository(db),
 	}
 }

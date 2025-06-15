@@ -7,6 +7,7 @@ import (
 )
 
 type Quiz interface {
+	CreateQuiz(input *domain.CreateQuiz) (int, error)
 }
 
 type Question interface {
@@ -27,5 +28,6 @@ type Usecase struct {
 func NewUsecase(repo *repository.Repository, jwtService *service.JWTService) *Usecase {
 	return &Usecase{
 		User: NewAuthService(repo.User, jwtService),
+		Quiz: NewQuizUsecase(repo.Quiz),
 	}
 }
