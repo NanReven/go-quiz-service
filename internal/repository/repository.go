@@ -7,7 +7,13 @@ import (
 )
 
 type Quiz interface {
-	CreateQuiz(input *domain.CreateQuiz) (int, error)
+	CreateQuiz(input *domain.CreateQuizInput) (int, error)
+	GetQuizById(quizID, userID int) (domain.Quiz, error)
+	GetAllQuizes(userID int) ([]domain.Quiz, error)
+	UpdateQuizTitle(input *domain.UpdateQuizInput) error
+	UpdateQuizDescription(input *domain.UpdateQuizInput) error
+	DeleteQuiz(quizID, userID int) error
+	CheckQuizStatus(quizID, userID int) (bool, error)
 }
 
 type Question interface {
