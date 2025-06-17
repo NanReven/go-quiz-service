@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -31,7 +32,7 @@ func (h *Handler) AuthMiddleware(c *gin.Context) {
 	c.Next()
 }
 
-func (h *Handler) GetUserId(c *gin.Context) (int, bool) {
+func (h *Handler) GetUserID(c *gin.Context) (int, bool) {
 	id, ok := c.Get("userId")
 	if !ok {
 		newErrorResponse(c, http.StatusUnauthorized, "user is not authorized", "user ID is not set")
@@ -45,4 +46,14 @@ func (h *Handler) GetUserId(c *gin.Context) (int, bool) {
 	}
 
 	return userId, true
+}
+
+func GetQuizID(c *gin.Context) (int, bool) {
+	id := c.Param("id")
+	quizID, err := strconv.Atoi(id)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid quiz id", err.Error())
+		return 0, false
+	}
+	return quizID, true
 }
